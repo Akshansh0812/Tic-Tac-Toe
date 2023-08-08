@@ -9,8 +9,8 @@ import com.example.tictactoe.databinding.ActivityMainBinding
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private var flag : Boolean = false
-    private lateinit var winner : CharSequence
-    private  var count : Int = 0
+    private var count:Int = 0
+    private lateinit var turnText : String
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -43,19 +43,29 @@ class MainActivity : AppCompatActivity() {
         binding.btn9.setOnClickListener {
             onclick(binding.btn9)
         }
+
+        binding.btnReset.setOnClickListener {
+            newGame()
+        }
     }
 
+
+
     private fun onclick(btn : Button) {
+        turnText = ""
         if(btn.text == ""){
             count++
             if(!flag){
                 flag = true
                 btn.text = "X";
+                turnText = "Turn : 0"
             }
             else{
                 flag = false;
                 btn.text = "0";
+                turnText = "Turn : X"
             }
+            binding.playerTurn.text = turnText
         }
         win()
     }
@@ -104,12 +114,13 @@ class MainActivity : AppCompatActivity() {
             newGame()
         }
         else if(count == 9){
-            toast("Draw")
+            toast("Match is draw");
             newGame()
         }
     }
 
     private fun newGame() {
+        turnText = "Turn : X"
         binding.btn1.text = ""
         binding.btn2.text = ""
         binding.btn3.text = ""
@@ -119,11 +130,13 @@ class MainActivity : AppCompatActivity() {
         binding.btn7.text = ""
         binding.btn8.text = ""
         binding.btn9.text = ""
+        binding.playerTurn.text = turnText
+        count = 0
 
     }
 
     private fun toast(text: String) {
-        Toast.makeText(this,text,Toast.LENGTH_SHORT).show()
+        Toast.makeText(this,text,Toast.LENGTH_LONG).show()
     }
 
 }
