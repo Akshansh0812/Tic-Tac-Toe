@@ -1,8 +1,9 @@
 package com.example.tictactoe
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.Button
+import android.widget.ImageView
 import android.widget.Toast
 import com.example.tictactoe.databinding.ActivityMainBinding
 
@@ -10,11 +11,26 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private var flag : Boolean = false
     private var count:Int = 0
-    private lateinit var turnText : String
+    private lateinit var playerOneName : Any
+    private lateinit var playerTwoName : Any
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+
+        binding.playerOne.text = intent.getStringExtra("playerOne")
+        binding.playerTwo.text = intent.getStringExtra("playerTwo")
+
+        playerOneName = binding.playerOne.text
+        playerTwoName = binding.playerTwo.text
+
+        binding.playerTwoLayout.setBackgroundResource(R.drawable.round_back_dark_blue)
+        binding.playerOneLayout.setBackgroundResource(R.drawable.round_back_blue_border)
+
+        binding.startAgain.setOnClickListener{
+            newGame()
+        }
 
         binding.btn1.setOnClickListener {
             onclick(binding.btn1)
@@ -43,74 +59,73 @@ class MainActivity : AppCompatActivity() {
         binding.btn9.setOnClickListener {
             onclick(binding.btn9)
         }
-
-        binding.btnReset.setOnClickListener {
-            newGame()
-        }
     }
 
 
 
-    private fun onclick(btn : Button) {
-        turnText = ""
-        if(btn.text == ""){
+    private fun onclick(btn : ImageView) {
+
+        if(btn.drawable == null){
             count++
             if(!flag){
                 flag = true
-                btn.text = "X";
-                turnText = "Turn : 0"
+
+                binding.playerTwoLayout.setBackgroundResource(R.drawable.round_back_blue_border)
+                binding.playerOneLayout.setBackgroundResource(R.drawable.round_back_dark_blue)
+                btn.setImageResource(R.drawable.cross_icon)
+                win(playerOneName)
             }
             else{
                 flag = false;
-                btn.text = "0";
-                turnText = "Turn : X"
+                binding.playerTwoLayout.setBackgroundResource(R.drawable.round_back_dark_blue)
+                binding.playerOneLayout.setBackgroundResource(R.drawable.round_back_blue_border)
+                btn.setImageResource(R.drawable.zero_icon)
+                win(playerTwoName)
             }
-            binding.playerTurn.text = turnText
         }
-        win()
     }
 
-    private fun win() {
-        val b1 = binding.btn1.text;
-        val b2 = binding.btn2.text;
-        val b3 = binding.btn3.text;
-        val b4 = binding.btn4.text;
-        val b5 = binding.btn5.text;
-        val b6 = binding.btn6.text;
-        val b7 = binding.btn7.text;
-        val b8 = binding.btn8.text;
-        val b9 = binding.btn9.text;
+    private fun win(playerName: Any?) {
+        val b1 = binding.btn1.drawable
+        val b2 = binding.btn2.drawable
+        val b3 = binding.btn3.drawable
+        val b4 = binding.btn4.drawable
+        val b5 = binding.btn5.drawable
+        val b6 = binding.btn6.drawable
+        val b7 = binding.btn7.drawable
+        val b8 = binding.btn8.drawable
+        val b9 = binding.btn9.drawable
 
-        if(b1 == b2 && b2 == b3 && b3 != ""){
-            toast("winner is : $b1")
+        if(b1?.constantState == b2?.constantState && b2?.constantState == b3?.constantState && b3 != null){
+            toast("winner is : $playerName")
             newGame()
         }
-        else if(b4 == b5 && b5 == b6 && b6 != ""){
-            toast("winner is : $b4")
+        else if(b4?.constantState == b5?.constantState && b5?.constantState == b6?.constantState && b6 != null){
+            toast("winner is : $playerName")
             newGame()
         }
-        else if(b7 == b8 && b8 == b9 && b9 != ""){
-            toast("winner is : $b7")
+        else if(b7?.constantState == b8?.constantState && b8?.constantState == b9?.constantState && b9 != null){
+            toast("winner is : $playerName")
             newGame()
         }
-        else if(b1 == b4 && b4 == b7 && b7 != ""){
-            toast("winner is : $b1")
+        else if(b1?.constantState == b4?.constantState && b4?.constantState == b7?.constantState && b7 != null){
+            toast("winner is : $playerName")
             newGame()
         }
-        else if(b2 == b5 && b5 == b8 && b8 != ""){
-            toast("winner is : $b2")
+        else if(b2?.constantState == b5?.constantState && b5?.constantState == b8?.constantState && b8 != null){
+            toast("winner is : $playerName")
             newGame()
         }
-        else if(b3 == b6 && b6 == b9 && b9 != ""){
-            toast("winner is : $b3")
+        else if(b3?.constantState == b6?.constantState && b6?.constantState == b9?.constantState && b9 != null){
+            toast("winner is : $playerName")
             newGame()
         }
-        else if(b1 == b5 && b5 == b9 && b9 != ""){
-            toast("winner is : $b1")
+        else if(b1?.constantState == b5?.constantState && b5?.constantState == b9?.constantState && b9!= null){
+            toast("winner is : $playerName")
             newGame()
         }
-        else if(b3 == b5 && b5 == b7 && b7 != "") {
-            toast("winner is : $b3")
+        else if(b3?.constantState == b5?.constantState && b5?.constantState == b7?.constantState && b7 != null) {
+            toast("winner is : $playerName")
             newGame()
         }
         else if(count == 9){
@@ -120,23 +135,25 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun newGame() {
-        turnText = "Turn : X"
-        binding.btn1.text = ""
-        binding.btn2.text = ""
-        binding.btn3.text = ""
-        binding.btn4.text = ""
-        binding.btn5.text = ""
-        binding.btn6.text = ""
-        binding.btn7.text = ""
-        binding.btn8.text = ""
-        binding.btn9.text = ""
-        binding.playerTurn.text = turnText
+        binding.btn1.setImageResource(R.drawable.image_button_bg)
+        binding.btn2.setImageResource(R.drawable.image_button_bg)
+        binding.btn3.setImageResource(R.drawable.image_button_bg)
+        binding.btn4.setImageResource(R.drawable.image_button_bg)
+        binding.btn5.setImageResource(R.drawable.image_button_bg)
+        binding.btn6.setImageResource(R.drawable.image_button_bg)
+        binding.btn7.setImageResource(R.drawable.image_button_bg)
+        binding.btn8.setImageResource(R.drawable.image_button_bg)
+        binding.btn9.setImageResource(R.drawable.image_button_bg)
+
+        binding.playerTwoLayout.setBackgroundResource(R.drawable.round_back_dark_blue)
+        binding.playerOneLayout.setBackgroundResource(R.drawable.round_back_blue_border)
         count = 0
+        flag = false
 
     }
 
     private fun toast(text: String) {
-        Toast.makeText(this,text,Toast.LENGTH_LONG).show()
+        Toast.makeText(this,text,Toast.LENGTH_SHORT).show()
     }
 
 }
